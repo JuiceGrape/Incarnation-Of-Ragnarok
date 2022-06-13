@@ -249,9 +249,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3491f84f5e527034daae3596891a9c13, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_seed: 133742069
   width: 10
   height: 10
+  tilewidth: 10
+  tileHeight: 10
+  minWeight: 0
+  maxWeight: 10
   filler: {fileID: 11400000, guid: c7633ca55f7db5e4cac138afe787cb5b, type: 2}
+  start: {fileID: 11400000, guid: c7633ca55f7db5e4cac138afe787cb5b, type: 2}
+  startPos: {x: 0, y: 0}
+  end: {fileID: 11400000, guid: c7633ca55f7db5e4cac138afe787cb5b, type: 2}
+  endPos: {x: 9, y: 9}
   layout:
   - room: {fileID: 11400000, guid: 50d9b95e0da39a946804a06cb80685b3, type: 2}
     weight: 16
