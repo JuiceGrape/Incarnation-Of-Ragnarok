@@ -72,12 +72,12 @@ public class PlayerController : MonoBehaviour
         //State behaviour
         if (CurrentState != null)
         {
+            CurrentState.Do();
+
             while (EventQueue.Count > 0)
             {
                 HandleEvent(EventQueue.Dequeue());
             }
-
-            CurrentState.Do(); 
         }
 
         if (attackTimer < 0)
@@ -103,13 +103,7 @@ public class PlayerController : MonoBehaviour
 
     private void GenerateEvents()
     {
-        if (CurrentState is IDestinationCalculator)
-        {
-            if (((IDestinationCalculator)CurrentState).IsAtDestination(transform.position))
-            {
-                AddEvent(Event.DestinationReached);
-            }
-        }
+
     }
 
     public void AddEvent(Event pEvent)
@@ -208,7 +202,41 @@ public class PlayerController : MonoBehaviour
         var hittable = target as Hittable;
         if (hittable != null)
         {
-            //Do some stuff with attacking the enemy
+            if (attackTimer >= 0.0f)
+            {
+                animator.SetTrigger("Attack");
+                attackTimer -= player.GetAttackDelay();
+            }
+        }
+    }
+
+    public Player GetAttachedPlayer()
+    {
+        return player;
+    }
+
+    void AttackTriggered() //Called by animation
+    {
+        var projectile = player.GetProjectile();
+        if (projectile)
+        {
+            if (!projectileSource)
+            {
+                Debug.LogError("Tried to spawn a projectile but did not have a source location");
+                return;
+            }
+            Debug.Log("Spawn Projectile");
+            var spawnedProjectile = GameObject.Instantiate<Projectile>(projectile, projectileSource.transform.position, transform.rotation);
+            spawnedProjectile.Target(target as Hittable); // If no target, this returns null and is handled in the firing code
+            spawnedProjectile.Initialize(player.GetAttackRange() * 1.1f, player.GetDamage(), player.GetDamageType());
+        }
+        else if (target != null)
+        {
+            var hittable = target as Hittable;
+            if (hittable)
+            {
+                hittable.TakeHit(player.GetDamage(), player.GetDamageType());
+            }
         }
     }
 }

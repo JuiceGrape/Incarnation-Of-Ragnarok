@@ -1,11 +1,14 @@
 ﻿using UnityEngine;
 
-public class PCMovingToLocation : IPlayerControllerState, IDestinationCalculator
+public class PCMovingToLocation : IPlayerControllerState
 {
     private Vector3 CachedDestination;
     public override void Do()
     {
-        //Empty
+        if (IsAtDestination(AttachedContainer.transform.position))
+        {
+            AttachedContainer.AddEvent(PlayerController.Event.DestinationReached);
+        }
     }
 
     public override void Entry()
@@ -45,7 +48,8 @@ public class PCMovingToLocation : IPlayerControllerState, IDestinationCalculator
                 NewState.Initialize(AttachedContainer);
                 break;
             case PlayerController.Event.TargetClicked:
-                //TODO: Move to target state
+                NewState = new PCMovingToTarget();
+                NewState.Initialize(AttachedContainer);
                 break;
             default:
                 //Unhandled event
@@ -55,7 +59,7 @@ public class PCMovingToLocation : IPlayerControllerState, IDestinationCalculator
         return NewState;
     }
 
-    public bool IsAtDestination(Vector3 position)
+    bool IsAtDestination(Vector3 position)
     {
         return Vector3.Distance(position, CachedDestination) <= 0.05f; //Tiny margin of error to account for floating point inaccuracy 
     }

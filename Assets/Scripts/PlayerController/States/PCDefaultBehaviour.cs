@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-public class PCDefaultBehaviour : IPlayerControllerState, IDestinationCalculator
+public class PCDefaultBehaviour : IPlayerControllerState
 {
     private IPlayerControllerState SubState;
 
@@ -52,15 +52,6 @@ public class PCDefaultBehaviour : IPlayerControllerState, IDestinationCalculator
         SubState = new PCIdle(); //Create substate on entry
         SubState.Initialize(container);
         SubState.Entry();
-    }
-
-    public bool IsAtDestination(Vector3 position)
-    {
-        var calculator = SubState as IDestinationCalculator;
-        if (calculator != null)
-            return calculator.IsAtDestination(position);
-        else
-            return false;
     }
 
     private void HandleSubstateEvent(PlayerController.Event pEvent)

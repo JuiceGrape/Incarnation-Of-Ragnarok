@@ -31,7 +31,8 @@
                 NewState.Initialize(AttachedContainer);
                 break;
             case PlayerController.Event.TargetClicked:
-                //TODO: Move to target state
+                NewState = new PCMovingToTarget();
+                NewState.Initialize(AttachedContainer);
                 break;
             default:
                 //Unhandled event
