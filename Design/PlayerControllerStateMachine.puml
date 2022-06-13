@@ -1,0 +1,38 @@
+@startuml
+
+[*] --> DefaultBehaviour
+DefaultBehaviour -> AbilityUsing : AbilityActivated
+AbilityUsing : Entry: DisableMovement(), Cast(ability)
+
+state DefaultBehaviour {
+    [*] -> Idle
+
+    AbilityUsing --> [H]: AbilityEnded
+    AbilityUsing --> MovingToTarget : TargetClicked
+    AbilityUsing --> MovingToLocation : GroundClicked
+
+    Idle : Entry: DisableMovement()
+    Idle --> MovingToTarget : TargetClicked
+    Idle --> MovingToLocation : GroundClicked
+
+    MovingToLocation : Entry: SetDestination(MouseGroundPosition), EnableMovement()
+    MovingToLocation --> MovingToLocation : GroundClicked / ClickHeld
+    MovingToLocation --> Idle : DestinationReached
+    MovingToLocation --> MovingToTarget : TargetClicked
+
+    MovingToTarget : Entry: EnableMovement()
+    MovingToTarget : Do: SetDestination(target.position)
+    MovingToTarget -up-> Idle : DestinationReached : target is Interactable \n Interact()
+    MovingToTarget --> Attacking : DestinationReached : target is Hittable
+    MovingToTarget --> MovingToLocation : GroundClicked
+
+    Attacking : Entry: DisableMovement(), TurnToLocation(target.position)
+    Attacking : Do: AttackTarget()
+    Attacking --> MovingToLocation : GroundClicked
+    Attacking --> Idle : TargetDied
+    Attacking -> MovingToTarget : TargetClicked / TargetLeftReach
+}
+
+
+
+@enduml
