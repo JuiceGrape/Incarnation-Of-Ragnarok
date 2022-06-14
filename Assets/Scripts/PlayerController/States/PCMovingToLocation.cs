@@ -31,11 +31,6 @@ public class PCMovingToLocation : IPlayerControllerState
         //Empty
     }
 
-    public override PlayerController.State GetStateType()
-    {
-        throw new System.NotImplementedException();
-    }
-
     public override IPlayerControllerState HandleEvent(PlayerController.Event pEvent)
     {
         IPlayerControllerState NewState = this;
