@@ -2,7 +2,7 @@
 
 public class PCMovingToLocation : IPlayerControllerState
 {
-    private Vector3 CachedDestination;
+    private Vector3? CachedDestination;
     public override void Do()
     {
         if (IsAtDestination(AttachedContainer.transform.position))
@@ -13,13 +13,16 @@ public class PCMovingToLocation : IPlayerControllerState
 
     public override void Entry()
     {
-        CachedDestination = AttachedContainer.GetMouseGroundPosition();
-
-        if (CachedDestination != Vector3.negativeInfinity)
+        if (!CachedDestination.HasValue)
         {
-            AttachedContainer.SetDestination(CachedDestination);
-        }
+            CachedDestination = AttachedContainer.GetMouseGroundPosition();
 
+            if (CachedDestination != Vector3.negativeInfinity)
+            {
+                AttachedContainer.SetDestination(CachedDestination.Value);
+            }
+        }
+        
         AttachedContainer.EnableMovement();
     }
 
@@ -61,6 +64,6 @@ public class PCMovingToLocation : IPlayerControllerState
 
     bool IsAtDestination(Vector3 position)
     {
-        return Vector3.Distance(position, CachedDestination) <= 0.05f; //Tiny margin of error to account for floating point inaccuracy 
+        return Vector3.Distance(position, CachedDestination.Value) <= 0.05f; //Tiny margin of error to account for floating point inaccuracy 
     }
 }

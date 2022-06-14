@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
 
 
 
-    [SerializeField] private PlayerInput input;
+    [SerializeField] private PlayerInput input = null;
 
     [SerializeField] private float interactionDistance = 1.5f;
 
@@ -40,6 +40,8 @@ public class PlayerController : MonoBehaviour
     Vector3 mousePos;
 
     Targetable target;
+
+    bool IsCasting = false;
 
     float attackTimer = 0.0f;
 
@@ -62,7 +64,7 @@ public class PlayerController : MonoBehaviour
         projectileSource = GetComponentInChildren<ProjectileLocation>();
 
         //Initialize state behaviour
-        CurrentState = new PCDefaultBehaviour();
+        CurrentState = new PCIdle();
         CurrentState.Initialize(this);
         CurrentState.Entry();
     }
@@ -70,7 +72,7 @@ public class PlayerController : MonoBehaviour
     private void Update()
     {
         //State behaviour
-        if (CurrentState != null)
+        if (!IsCasting)
         {
             CurrentState.Do();
 
@@ -85,6 +87,16 @@ public class PlayerController : MonoBehaviour
 
         //Generate events based on logic
         GenerateEvents();
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            OnCastStart();
+        }
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            OnCastEnd();
+        }
     }
 
     private void HandleEvent(Event pEvent)
@@ -108,12 +120,13 @@ public class PlayerController : MonoBehaviour
 
     public void AddEvent(Event pEvent)
     {
-        EventQueue.Enqueue(pEvent);
+        if (!IsCasting)
+            EventQueue.Enqueue(pEvent);
     }
 
     void OnMousePosChanged(Vector3 mousePos)
     {
-        this.mousePos = mousePos; //Update groundpos only on request if mousepos has changed
+        this.mousePos = mousePos; //Calculate on request: Most likely (way) more mouse updates than requests for ground position
     }
 
     void OnMovementStateChanged(Enums.InputState state)
@@ -134,6 +147,8 @@ public class PlayerController : MonoBehaviour
 
     void OnClick()
     {
+        OnCastCanceled();
+
         if (Targetable.CurrentTarget != null)
         {
             target = Targetable.CurrentTarget;
@@ -215,7 +230,9 @@ public class PlayerController : MonoBehaviour
         return player;
     }
 
-    void AttackTriggered() //Called by animation
+    //External things
+
+    public void AttackTriggered() //Called by animation
     {
         var projectile = player.GetProjectile();
         if (projectile)
@@ -238,5 +255,22 @@ public class PlayerController : MonoBehaviour
                 hittable.TakeHit(player.GetDamage(), player.GetDamageType());
             }
         }
+    }
+
+    public void OnCastStart()
+    {
+        IsCasting = true;
+        DisableMovement();
+    }
+
+    public void OnCastEnd() //Should be called at the end of casting by the casting animation or other sources
+    {
+        IsCasting = false;
+        CurrentState.Entry();
+    }
+
+    public void OnCastCanceled()
+    {
+        IsCasting = false; 
     }
 }

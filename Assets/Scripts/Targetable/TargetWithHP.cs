@@ -5,7 +5,7 @@ using UnityEngine;
 public class TargetWithHP : Hittable
 {
     [SerializeField]
-    private Resource HP;
+    private Resource HP = null;
 
     protected override void Start()
     {
@@ -16,6 +16,7 @@ public class TargetWithHP : Hittable
     {
         if (HP.GetValue() != HP.minValue && HP.DecreaseValue(damage) == HP.minValue) //TODO: Enemy controller with resistances through scriptable object
         {
+            GetComponent<Collider>().enabled = false;
             GetComponent<Animator>().SetBool("Death", true);
         }
     }

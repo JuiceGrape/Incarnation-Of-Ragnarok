@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
-
-public class PCMovingToTarget : IPlayerControllerState
+public class PCAttacking : IPlayerControllerState
 {
     Targetable CachedTarget;
     float CachedInteractionDistance = 0.0f;
@@ -20,19 +19,20 @@ public class PCMovingToTarget : IPlayerControllerState
             }
         }
 
-        if (IsAtDestination(AttachedContainer.transform.position))
+        if (TargetLeftReach(AttachedContainer.transform.position))
         {
-            AttachedContainer.AddEvent(PlayerController.Event.DestinationReached);
+            AttachedContainer.AddEvent(PlayerController.Event.TargetLeftReach);
         }
         else
         {
-            AttachedContainer.SetDestination(CachedTarget.transform.position);
+            AttachedContainer.AttackTarget();
         }
+        
     }
 
     public override void Entry()
     {
-        AttachedContainer.EnableMovement();
+        AttachedContainer.DisableMovement();
     }
 
     public override void Exit()
@@ -54,17 +54,13 @@ public class PCMovingToTarget : IPlayerControllerState
                 NewState = new PCMovingToLocation();
                 NewState.Initialize(AttachedContainer);
                 break;
-            case PlayerController.Event.DestinationReached:
-                if (CachedTarget is Hittable)
-                {
-                    NewState = new PCAttacking(); //DEBUG CODE, SHOULD BE ATTACK
-                    NewState.Initialize(AttachedContainer);
-                }
-                else if (CachedTarget is Interactable)
-                {
-                    NewState = new PCIdle();
-                    ((Interactable)CachedTarget).Interact(); //Technically, the exit of this state needs to happen before this happens
-                }
+            case PlayerController.Event.TargetLeftReach:
+            case PlayerController.Event.TargetClicked: //Same behaviour
+                NewState = new PCMovingToTarget();
+                NewState.Initialize(AttachedContainer);
+                break;
+            case PlayerController.Event.TargetDied:
+                NewState = new PCIdle();
                 NewState.Initialize(AttachedContainer);
                 break;
             default:
@@ -75,12 +71,11 @@ public class PCMovingToTarget : IPlayerControllerState
         return NewState;
     }
 
-
-    bool IsAtDestination(Vector3 position)
+    bool TargetLeftReach(Vector3 position)
     {
         if (CachedTarget == null)
             return false;
 
-        return CachedTarget.GetDistanceTo(position) <= CachedInteractionDistance;
+        return CachedTarget.GetDistanceTo(position) > CachedInteractionDistance * 1.2;
     }
 }
