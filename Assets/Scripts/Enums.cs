@@ -49,6 +49,7 @@ public class Enums
     {
         Down,
         Up,
+        Held,
         Invalid
     }
 

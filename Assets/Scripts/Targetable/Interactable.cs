@@ -9,7 +9,7 @@ public class Interactable : Targetable
         return false;
     }
 
-    public void Interact()
+    public virtual void Interact()
     {
         Debug.Log("Player interacted with " + transform.name);
     }

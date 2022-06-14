@@ -11,8 +11,6 @@ public class Hittable : Targetable
         projectileTarget = GetComponentInChildren<ProjectileLocation>();
         if (!projectileTarget)
             Debug.LogError("Hittable has no projectile target. Defaulting to own location as target"); //TODO: Maybe warning instead?
-        else
-            Debug.Log("TEST");
 
     }
     public Vector3 GetHitPosition()

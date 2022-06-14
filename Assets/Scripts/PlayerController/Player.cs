@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour //Acts like a layer between equipment and logic to provide calculations for damage / range / other
 {
     [SerializeField]
-    private Weapon EquippedWeapon;
+    private Weapon EquippedWeapon = null;
 
     public float GetAttackRange()
     {

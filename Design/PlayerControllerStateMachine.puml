@@ -1,0 +1,29 @@
+@startuml
+
+[*] -down-> Idle
+
+Idle : Entry: DisableMovement()
+Idle -right-> MovingToTarget : TargetClicked
+Idle -left-> MovingToLocation : GroundClicked
+
+MovingToLocation : Entry: SetDestination(MouseGroundPosition), EnableMovement()
+MovingToLocation --> MovingToLocation : GroundClicked / ClickHeld
+MovingToLocation --> Idle : DestinationReached
+MovingToLocation --> MovingToTarget : TargetClicked
+
+MovingToTarget : Entry: EnableMovement()
+MovingToTarget : Do: SetDestination(target.position)
+MovingToTarget --> Idle : DestinationReached : target is Interactable \n Interact()
+MovingToTarget --> Attacking : DestinationReached : target is Hittable
+MovingToTarget --> MovingToLocation : GroundClicked
+
+Attacking : Entry: DisableMovement(), TurnToLocation(target.position)
+Attacking : Do: AttackTarget()
+Attacking --> MovingToLocation : GroundClicked
+Attacking --> Idle : TargetDied
+Attacking --> MovingToTarget : TargetClicked / TargetLeftReach
+
+
+
+
+@enduml
