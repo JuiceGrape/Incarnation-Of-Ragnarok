@@ -107,7 +107,6 @@ public class PlayerController : MonoBehaviour
 
         if (prevState != CurrentState)
         {
-            Debug.Log(CurrentState);
             prevState.Exit();
             CurrentState.Entry();
         }
