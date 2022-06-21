@@ -28,14 +28,17 @@ public class PlayerController : MonoBehaviour
     }
 
 
+    public AbilityBase debugAbility = null;
 
     [SerializeField] private PlayerInput input = null;
+    [SerializeField] private AbilityIndicator indicator = null;
 
     [SerializeField] private float interactionDistance = 1.5f;
 
     int GroundLayerMask;
     Animator animator;
     ProjectileLocation projectileSource;
+    IndicatorOrigin indicatorOrigin;
     Player player;
     Vector3 mousePos;
 
@@ -48,6 +51,7 @@ public class PlayerController : MonoBehaviour
     private Queue<Event> EventQueue = new Queue<Event>();
 
     IPlayerControllerState CurrentState;
+    
 
     void Start()
     {
@@ -67,6 +71,10 @@ public class PlayerController : MonoBehaviour
         CurrentState = new PCIdle();
         CurrentState.Initialize(this);
         CurrentState.Entry();
+
+        indicatorOrigin = GetComponentInChildren<IndicatorOrigin>();
+        if (!indicatorOrigin)
+            Debug.LogError("Player has no indicator origin. Defaulting to own location as origin"); //TODO: Maybe warning instead?
     }
 
     private void Update()
@@ -90,6 +98,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
+
             OnCastStart();
         }
 
@@ -258,12 +267,21 @@ public class PlayerController : MonoBehaviour
 
     public void OnCastStart()
     {
+        //DEBUG
+        indicator.SetAbility(debugAbility);
+        indicator.ShowIndicator();
+        //DEBUG END
+
         IsCasting = true;
         DisableMovement();
     }
 
     public void OnCastEnd() //Should be called at the end of casting by the casting animation or other sources
     {
+        //DEBUG
+        indicator.StopIndicator();
+        //DEBUG END
+
         IsCasting = false;
         CurrentState.Entry();
     }
@@ -271,5 +289,10 @@ public class PlayerController : MonoBehaviour
     public void OnCastCanceled()
     {
         IsCasting = false; 
+    }
+
+    public Vector3 GetIndicatorPosition()
+    {
+        return indicatorOrigin.transform.position;
     }
 }
