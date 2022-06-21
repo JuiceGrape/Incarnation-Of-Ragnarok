@@ -28,8 +28,6 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    public AbilityBase debugAbility = null;
-
     [SerializeField] private PlayerInput input = null;
     [SerializeField] private AbilityIndicator indicator = null;
 
@@ -55,11 +53,8 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        if (input != null)
-        {
-            input.OnMousePosChanged.AddListener(OnMousePosChanged);
-            input.OnMovementChanged.AddListener(OnMovementStateChanged);
-        }
+        input.OnMousePosChanged.AddListener(OnMousePosChanged);
+        AttachMovementEvent();
 
         GroundLayerMask = LayerMask.GetMask("Ground"); //Make sure the player can only target the ground
 
@@ -95,17 +90,6 @@ public class PlayerController : MonoBehaviour
 
         //Generate events based on logic
         GenerateEvents();
-
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-
-            OnCastStart();
-        }
-
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            OnCastEnd();
-        }
     }
 
     private void HandleEvent(Event pEvent)
@@ -267,21 +251,12 @@ public class PlayerController : MonoBehaviour
 
     public void OnCastStart()
     {
-        //DEBUG
-        indicator.SetAbility(debugAbility);
-        indicator.ShowIndicator();
-        //DEBUG END
-
         IsCasting = true;
         DisableMovement();
     }
 
     public void OnCastEnd() //Should be called at the end of casting by the casting animation or other sources
     {
-        //DEBUG
-        indicator.StopIndicator();
-        //DEBUG END
-
         IsCasting = false;
         CurrentState.Entry();
     }
@@ -294,5 +269,10 @@ public class PlayerController : MonoBehaviour
     public Vector3 GetIndicatorPosition()
     {
         return indicatorOrigin.transform.position;
+    }
+
+    public void AttachMovementEvent()
+    {
+        input.OnMovementChanged.AddListener(OnMovementStateChanged);
     }
 }

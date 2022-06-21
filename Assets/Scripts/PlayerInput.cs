@@ -10,10 +10,21 @@ public class PlayerInput : MonoBehaviour
     public UnityEvent<Vector3> OnMousePosChanged;
     public UnityEvent<Enums.InputState> OnMovementChanged;
 
+    public UnityEvent<int, Enums.InputState> OnAbilityStateChanged;
+
     private Vector3 MousePos;
 
     private Enums.InputState MouseState;
     private float SecondsSinceMouseDown = 0.0f;
+
+    private Dictionary<int, KeyCode> AbilityKeys = new Dictionary<int, KeyCode>()
+    {
+        {0, KeyCode.Space }, //Maybe fully separate ability, otherwise ability 0 is always dash ability
+        {1, KeyCode.Q },
+        {2, KeyCode.W },
+        {3, KeyCode.E },
+        {4, KeyCode.R }
+    };
 
     // Update is called once per frame
     void Update()
@@ -22,6 +33,18 @@ public class PlayerInput : MonoBehaviour
         {
             MousePos = Input.mousePosition;
             OnMousePosChanged.Invoke(MousePos);
+        }
+
+        foreach(var val in AbilityKeys)
+        {
+            if (Input.GetKeyDown(val.Value))
+            {
+                OnAbilityStateChanged.Invoke(val.Key, Enums.InputState.Down);
+            }
+            else if (Input.GetKeyUp(val.Value))
+            {
+                OnAbilityStateChanged.Invoke(val.Key, Enums.InputState.Up);
+            }
         }
 
         if (Input.GetMouseButtonDown(0))

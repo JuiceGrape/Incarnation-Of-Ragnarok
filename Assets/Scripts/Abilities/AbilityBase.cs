@@ -13,7 +13,7 @@ public class AbilityBase : ScriptableObject
     [Tooltip("Size of ability after being cast")]
     public float Size;
 
-    public bool ShowsRangeOnPlayer()
+    public virtual bool ShowsRangeOnPlayer()
     {
         switch(TargetType)
         {
@@ -22,6 +22,17 @@ public class AbilityBase : ScriptableObject
                 return false;
             default:
                 return true;
+        }
+    }
+
+    public virtual bool CastsInstantly()
+    {
+        switch(TargetType)
+        {
+            case Enums.AbilityTarget.Self:
+                return Mathf.Approximately(Range, 0.0f);
+            default:
+                return false;
         }
     }
 }

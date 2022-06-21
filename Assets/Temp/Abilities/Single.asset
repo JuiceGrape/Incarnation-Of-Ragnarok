@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 66aedfc1506c48245ad0b672c9dd5f13, type: 3}
-  m_Name: TEST
+  m_Name: Single
   m_EditorClassIdentifier: 
-  TargetType: 3
-  Range: 10
-  Size: 3
+  TargetType: 1
+  Range: 15
+  Size: 0
