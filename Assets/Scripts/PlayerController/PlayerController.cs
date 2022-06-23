@@ -28,14 +28,15 @@ public class PlayerController : MonoBehaviour
     }
 
 
-
     [SerializeField] private PlayerInput input = null;
+    [SerializeField] private AbilityIndicator indicator = null;
 
     [SerializeField] private float interactionDistance = 1.5f;
 
     int GroundLayerMask;
     Animator animator;
     ProjectileLocation projectileSource;
+    IndicatorOrigin indicatorOrigin;
     Player player;
     Vector3 mousePos;
 
@@ -48,14 +49,12 @@ public class PlayerController : MonoBehaviour
     private Queue<Event> EventQueue = new Queue<Event>();
 
     IPlayerControllerState CurrentState;
+    
 
     void Start()
     {
-        if (input != null)
-        {
-            input.OnMousePosChanged.AddListener(OnMousePosChanged);
-            input.OnMovementChanged.AddListener(OnMovementStateChanged);
-        }
+        input.OnMousePosChanged.AddListener(OnMousePosChanged);
+        AttachMovementEvent();
 
         GroundLayerMask = LayerMask.GetMask("Ground"); //Make sure the player can only target the ground
 
@@ -67,6 +66,10 @@ public class PlayerController : MonoBehaviour
         CurrentState = new PCIdle();
         CurrentState.Initialize(this);
         CurrentState.Entry();
+
+        indicatorOrigin = GetComponentInChildren<IndicatorOrigin>();
+        if (!indicatorOrigin)
+            Debug.LogError("Player has no indicator origin. Defaulting to own location as origin"); //TODO: Maybe warning instead?
     }
 
     private void Update()
@@ -87,16 +90,6 @@ public class PlayerController : MonoBehaviour
 
         //Generate events based on logic
         GenerateEvents();
-
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            OnCastStart();
-        }
-
-        if (Input.GetKeyDown(KeyCode.W))
-        {
-            OnCastEnd();
-        }
     }
 
     private void HandleEvent(Event pEvent)
@@ -271,5 +264,15 @@ public class PlayerController : MonoBehaviour
     public void OnCastCanceled()
     {
         IsCasting = false; 
+    }
+
+    public Vector3 GetIndicatorPosition()
+    {
+        return indicatorOrigin.transform.position;
+    }
+
+    public void AttachMovementEvent()
+    {
+        input.OnMovementChanged.AddListener(OnMovementStateChanged);
     }
 }

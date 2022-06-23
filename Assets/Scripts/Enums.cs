@@ -45,6 +45,22 @@ public class Enums
         Chaos //Random damage type for each attack
     }
 
+    public enum AbilityTarget
+    {
+        Self,
+        Single,
+        RangedAOE,
+        Line,
+        Cone
+    }
+
+    public enum CastMode
+    {
+        Normal,
+        QuickCast,
+        QuickCastWithoutIndicator
+    }
+
     public enum InputState
     {
         Down,

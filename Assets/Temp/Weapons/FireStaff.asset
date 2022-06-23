@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   WeaponModel: {fileID: 6544254532897439637, guid: e310a85031eba3441b263a5a7d482561,
     type: 3}
-  AttackSpeed: 0.5
+  AttackSpeed: 1
   AttackDamage: 5
   DamageType: 4
   Range: 15
