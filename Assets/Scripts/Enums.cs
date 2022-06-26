@@ -28,7 +28,7 @@ public class Enums
         Strength,
         Dexterity,
         Constitution,
-        Intelligence,
+        Intelligence
     }
 
     public enum Element

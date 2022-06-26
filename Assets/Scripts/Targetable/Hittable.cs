@@ -4,19 +4,19 @@ using UnityEngine;
 
 public class Hittable : Targetable
 {
-    ProjectileLocation projectileTarget;
+    ProjectileTarget projectileTarget;
     IndicatorOrigin indicatorOrigin;
 
     protected override void Start()
     {
         base.Start();
-        projectileTarget = GetComponentInChildren<ProjectileLocation>();
+        projectileTarget = GetComponentInChildren<ProjectileTarget>();
         if (!projectileTarget)
-            Debug.LogError("Hittable has no projectile target. Defaulting to own location as target"); //TODO: Maybe warning instead?
+            Debug.LogWarning("Hittable has no projectile target. Defaulting to own location as target"); //TODO: Maybe warning instead?
 
         indicatorOrigin = GetComponentInChildren<IndicatorOrigin>();
         if (!indicatorOrigin)
-            Debug.LogError("Hittable has no indicator origin. Defaulting to own location as origin"); //TODO: Maybe warning instead?
+            Debug.LogWarning("Hittable has no indicator origin. Defaulting to own location as origin"); //TODO: Maybe warning instead?
 
     }
     public Vector3 GetHitPosition()

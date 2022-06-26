@@ -35,10 +35,11 @@ public class PlayerController : MonoBehaviour
 
     int GroundLayerMask;
     Animator animator;
-    ProjectileLocation projectileSource;
+    
     IndicatorOrigin indicatorOrigin;
     Player player;
     Vector3 mousePos;
+    BasicAttackHandler basicAttack;
 
     Targetable target;
 
@@ -60,7 +61,8 @@ public class PlayerController : MonoBehaviour
 
         animator = GetComponent<Animator>();
         player = GetComponent<Player>();
-        projectileSource = GetComponentInChildren<ProjectileLocation>();
+        basicAttack = GetComponent<BasicAttackHandler>();
+
 
         //Initialize state behaviour
         CurrentState = new PCIdle();
@@ -144,6 +146,7 @@ public class PlayerController : MonoBehaviour
         if (Targetable.CurrentTarget != null)
         {
             target = Targetable.CurrentTarget;
+            basicAttack.SetTarget(target);
             AddEvent(Event.TargetClicked);
         }
         else
@@ -223,31 +226,6 @@ public class PlayerController : MonoBehaviour
     }
 
     //External things
-
-    public void AttackTriggered() //Called by animation
-    {
-        var projectile = player.GetProjectile();
-        if (projectile)
-        {
-            if (!projectileSource)
-            {
-                Debug.LogError("Tried to spawn a projectile but did not have a source location");
-                return;
-            }
-            Debug.Log("Spawn Projectile");
-            var spawnedProjectile = GameObject.Instantiate<Projectile>(projectile, projectileSource.transform.position, transform.rotation);
-            spawnedProjectile.Target(target as Hittable); // If no target, this returns null and is handled in the firing code
-            spawnedProjectile.Initialize(player.GetAttackRange() * 1.1f, player.GetDamage(), player.GetDamageType());
-        }
-        else if (target != null)
-        {
-            var hittable = target as Hittable;
-            if (hittable)
-            {
-                hittable.TakeHit(player.GetDamage(), player.GetDamageType());
-            }
-        }
-    }
 
     public void OnCastStart()
     {

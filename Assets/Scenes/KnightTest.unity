@@ -639,7 +639,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 351310023}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &985224804
+--- !u!114 &985224803
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -648,7 +648,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 985224802}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7557f0af66303044f9c7c3a885d7f6c3, type: 3}
+  m_Script: {fileID: 11500000, guid: e5485a213a7f096499e2a3af5661ea21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1205015844 stripped
@@ -1102,6 +1102,18 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &1549126140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1549126133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5667ab2f603854b4d82621bb68ada1fd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1727960725 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 539968907340218583, guid: e29492d1fb5467c49ba95994195e8d9d,
@@ -1327,6 +1339,24 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: a4c95727fe0256b4bae5d9c5d11792e0, type: 2}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5ca0f246d5cf56c4b89a29f8fdcae540, type: 3}
+--- !u!1 &1873590979 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 450655593628871426, guid: 5ca0f246d5cf56c4b89a29f8fdcae540,
+    type: 3}
+  m_PrefabInstance: {fileID: 1873590978}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1873590980
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1873590979}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5485a213a7f096499e2a3af5661ea21, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1950948486
 GameObject:
   m_ObjectHideFlags: 0
@@ -1466,6 +1496,11 @@ PrefabInstance:
       propertyPath: abilityIndicator
       value: 
       objectReference: {fileID: 1727960725}
+    - target: {fileID: 6663042720375544172, guid: b1c4b65914198ab42ac5d93b660dbfcf,
+        type: 3}
+      propertyPath: globalCastMode
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6663042720375544173, guid: b1c4b65914198ab42ac5d93b660dbfcf,
         type: 3}
       propertyPath: m_Name
