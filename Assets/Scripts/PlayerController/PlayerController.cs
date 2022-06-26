@@ -109,7 +109,7 @@ public class PlayerController : MonoBehaviour
 
     private void GenerateEvents()
     {
-
+        //Empty
     }
 
     public void AddEvent(Event pEvent)
@@ -146,7 +146,7 @@ public class PlayerController : MonoBehaviour
         if (Targetable.CurrentTarget != null)
         {
             target = Targetable.CurrentTarget;
-            basicAttack.SetTarget(target);
+            basicAttack.SetTarget(target as IDamageTaker);
             AddEvent(Event.TargetClicked);
         }
         else

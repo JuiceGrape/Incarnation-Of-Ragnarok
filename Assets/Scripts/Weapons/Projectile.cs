@@ -5,9 +5,12 @@ public class Projectile : MonoBehaviour
     [SerializeField]
     private float MovementSpeed = 5.0f;
 
+    [SerializeField]
+    private bool HitsPlayers = false;
+
     Vector3 StartPosition;
 
-    Hittable target;
+    IDamageTaker target;
 
     bool IsFlying = false;
 
@@ -25,9 +28,9 @@ public class Projectile : MonoBehaviour
         {
             float movement = MovementSpeed * Time.deltaTime;
 
-            if (target)
+            if (target != null)
             {
-                transform.LookAt(target.GetHitPosition());
+                transform.LookAt(target.GetProjectileTargetPosition());
             }
 
             Vector3 targetVector = transform.forward * movement;
@@ -35,14 +38,22 @@ public class Projectile : MonoBehaviour
             var hit = new RaycastHit();
             if (Physics.Raycast(transform.position, targetVector, out hit, movement)) //Actually hit the frame after for the effect?
             {
-                Debug.Log("Hit shit");
-                var hittable = hit.transform.GetComponent<Hittable>();
-                if (hittable)
+                var hittable = hit.transform.GetComponent<IDamageTaker>();
+                if (hittable != null) //Hit something that can take damage
                 {
-                    hittable.TakeHit(damage, damageType);
+                    if (AttemptHit(hittable)) //Returns true if it manages to damage the hit target (enemy projectiles can't hit enemies, player projectiles can't hit players)
+                    {
+                        Debug.Log("Hit target. The thing is " + HitsPlayers);
+                        Destroy(this.gameObject);
+                        return;
+                    }
                 }
-                Destroy(this.gameObject);
-                return;
+                else
+                {
+                    Debug.Log("Hit wall");
+                    Destroy(this.gameObject);
+                    return;
+                }
             }
 
             transform.Translate(targetVector, Space.World);
@@ -55,6 +66,27 @@ public class Projectile : MonoBehaviour
         }
     }
 
+    private bool AttemptHit(IDamageTaker damageTaker)
+    {
+        if(HitsPlayers)
+        {
+            if (damageTaker is Player)
+            {
+                damageTaker.TakeHit(damage, damageType);
+                return true;
+            }
+        }
+        else
+        {
+            if (!(damageTaker is Player))
+            {
+                damageTaker.TakeHit(damage, damageType);
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void Initialize(float range, float damage, Enums.Element damageType)
     {
         this.damage = damage;
@@ -64,8 +96,13 @@ public class Projectile : MonoBehaviour
         IsFlying = true;
     }
 
-    public void Target(Hittable target) //Damage is determined on projectile creation
+    public void Target(IDamageTaker target) //Damage is determined on projectile creation
     {
+        if (target is Player)
+        {
+            HitsPlayers = true;
+        }
+
         this.target = target;
     }
 }

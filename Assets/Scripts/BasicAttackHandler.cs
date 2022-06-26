@@ -7,7 +7,7 @@ public class BasicAttackHandler : MonoBehaviour
     private IAttackProvider source = null;
     private ProjectileSource projectileSource = null;
     // Start is called before the first frame update
-    private MonoBehaviour target = null;
+    private IDamageTaker target = null;
     void Start()
     {
         source = GetComponent<IAttackProvider>();
@@ -23,7 +23,7 @@ public class BasicAttackHandler : MonoBehaviour
         }
     }
 
-    public void SetTarget(MonoBehaviour target)
+    public void SetTarget(IDamageTaker target)
     {
         this.target = target;
     }
@@ -40,16 +40,12 @@ public class BasicAttackHandler : MonoBehaviour
                 return;
             }
             var spawnedProjectile = GameObject.Instantiate<Projectile>(projectile, projectileSource.transform.position, transform.rotation);
-            spawnedProjectile.Target(target as Hittable); // If no target, this returns null and is handled in the firing code
+            spawnedProjectile.Target(target); // If no target, this returns null and is handled in the firing code
             spawnedProjectile.Initialize(source.GetAttackRange() * 1.1f, source.GetDamage(), source.GetDamageType());
         }
         else if (target != null)
         {
-            var hittable = target as Hittable;
-            if (hittable)
-            {
-                hittable.TakeHit(source.GetDamage(), source.GetDamageType());
-            }
+            target.TakeHit(source.GetDamage(), source.GetDamageType());
         }
     }
 }
