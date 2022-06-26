@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour //Acts like a layer between equipment and logic to provide calculations for damage / range / other
+public class Player : MonoBehaviour, IAttackProvider, IDamageTaker
 {
     [SerializeField]
     private Weapon EquippedWeapon = null;
+    public void EquipWeapon(Weapon weapon)
+    {
+        throw new System.NotImplementedException("Can't equip weapons yet");
+    }
 
+    //IAttackProvider
     public float GetAttackRange()
     {
         if (EquippedWeapon != null)
@@ -17,11 +22,6 @@ public class Player : MonoBehaviour //Acts like a layer between equipment and lo
             return 0.0f;
         }
             
-    }
-
-    public void EquipWeapon(Weapon weapon)
-    {
-        throw new System.NotImplementedException("Can't equip weapons yet");
     }
 
     public float GetAttackDelay() //Delay between attack in seconds
@@ -45,5 +45,16 @@ public class Player : MonoBehaviour //Acts like a layer between equipment and lo
             return ((RangedWeapon)EquippedWeapon).GetProjectile();
         else
             return null;
+    }
+
+    //IDamageTaker
+    public void TakeHit(float damage, Enums.Element damageType)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    public Vector3 GetProjectileTargetPosition()
+    {
+        throw new System.NotImplementedException();
     }
 }

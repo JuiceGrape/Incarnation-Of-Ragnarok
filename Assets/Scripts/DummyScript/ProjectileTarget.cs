@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ProjectileLocation : MonoBehaviour
+public class ProjectileTarget : MonoBehaviour
 {
-
 }
