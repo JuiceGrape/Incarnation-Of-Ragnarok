@@ -13,6 +13,8 @@ public class AbilityBase : ScriptableObject
     [Tooltip("Size of ability after being cast")]
     public float Size;
 
+    public AnimationClip ReferenceAnimation;
+
     public virtual bool ShowsRangeOnPlayer()
     {
         switch(TargetType)

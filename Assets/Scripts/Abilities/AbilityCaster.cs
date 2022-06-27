@@ -54,7 +54,7 @@ public class AbilityCaster : MonoBehaviour
         {
             if (ability.CastsInstantly())
             {
-                Cast(cachedAbility);
+                Cast(ability);
                 return;
             }
 
@@ -73,7 +73,7 @@ public class AbilityCaster : MonoBehaviour
         {
             if (ability.CastsInstantly())
             {
-                Cast(cachedAbility);
+                Cast(ability);
                 return;
             }
 
@@ -101,11 +101,6 @@ public class AbilityCaster : MonoBehaviour
     
     void Cast(AbilityBase ability)
     {
-        playerController.Cast("CastNormal");
-    }
-
-    public void OnCastActivate()
-    {
-        Debug.Log("Casting: " + cachedAbility);
+        playerController.Cast(ability);
     }
 }

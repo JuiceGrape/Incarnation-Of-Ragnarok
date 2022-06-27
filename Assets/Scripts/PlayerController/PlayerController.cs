@@ -50,7 +50,8 @@ public class PlayerController : MonoBehaviour
     private Queue<Event> EventQueue = new Queue<Event>();
 
     public IPlayerControllerState CurrentState;
-    
+
+    AbilityBase cachedAbility = null;
 
     void Start()
     {
@@ -228,11 +229,15 @@ public class PlayerController : MonoBehaviour
     }
 
     //External things
-    public void Cast(string AbilityStateName)
+    public void Cast(AbilityBase ability)
     {
+        if (IsCasting)
+        {
+            OnCastCanceled();
+        }
         OnCastStart();
-        //animator.SetTrigger("UseAbility");
-        animator.Play(AbilityStateName);
+        cachedAbility = ability;
+        animator.Play(ability.ReferenceAnimation.name);
     }
 
     public void OnCastStart()
@@ -250,6 +255,10 @@ public class PlayerController : MonoBehaviour
     public void OnCastCanceled()
     {
         IsCasting = false; 
+    }
+    public void OnCastActivate()
+    {
+        Debug.Log("Casting: " + cachedAbility);
     }
 
     public Vector3 GetIndicatorPosition()
