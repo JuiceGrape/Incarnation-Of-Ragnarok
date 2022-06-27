@@ -15,3 +15,4 @@ MonoBehaviour:
   TargetType: 0
   Range: 0
   Size: 0
+  ReferenceAnimation: {fileID: 7400000, guid: 6f28f56d73142d14a94ce2adcb8f459a, type: 2}
