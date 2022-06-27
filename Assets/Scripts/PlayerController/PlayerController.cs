@@ -43,13 +43,13 @@ public class PlayerController : MonoBehaviour
 
     Targetable target;
 
-    bool IsCasting = false;
+    public bool IsCasting = false;
 
-    float attackTimer = 0.0f;
+    public float attackTimer = 0.0f;
 
     private Queue<Event> EventQueue = new Queue<Event>();
 
-    IPlayerControllerState CurrentState;
+    public IPlayerControllerState CurrentState;
     
 
     void Start()
@@ -161,10 +161,12 @@ public class PlayerController : MonoBehaviour
     public void DisableMovement()
     {
         GetComponent<NavMeshAgent>().isStopped = true;
+        animator.SetBool("IsMoving", false);
     }
 
     public void EnableMovement()
     {
+        animator.SetBool("IsMoving", true);
         GetComponent<NavMeshAgent>().isStopped = false;
     }
 
@@ -226,6 +228,12 @@ public class PlayerController : MonoBehaviour
     }
 
     //External things
+    public void Cast(string AbilityStateName)
+    {
+        OnCastStart();
+        //animator.SetTrigger("UseAbility");
+        animator.Play(AbilityStateName);
+    }
 
     public void OnCastStart()
     {

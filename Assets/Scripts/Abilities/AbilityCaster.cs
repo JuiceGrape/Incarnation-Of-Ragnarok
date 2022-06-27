@@ -98,9 +98,14 @@ public class AbilityCaster : MonoBehaviour
             Cast(ability);
         }
     }
-
+    
     void Cast(AbilityBase ability)
     {
-        playerController.OnCastStart();
+        playerController.Cast("CastNormal");
+    }
+
+    public void OnCastActivate()
+    {
+        Debug.Log("Casting: " + cachedAbility);
     }
 }

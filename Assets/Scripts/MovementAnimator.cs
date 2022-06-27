@@ -18,7 +18,7 @@ public class MovementAnimator : MonoBehaviour
     {
         Vector3 newPos = transform.position;
 
-        if (Vector3.Distance(newPos, oldPos) > 0.000001)
+        if (Vector3.Distance(newPos, oldPos) > 0.01)
         {
             animator.SetBool("IsMoving", true);
         }
