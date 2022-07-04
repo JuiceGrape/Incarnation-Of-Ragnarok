@@ -14,6 +14,7 @@ public class AbilityBase : ScriptableObject
     public float Size;
 
     public AnimationClip ReferenceAnimation;
+    public AnimationClip FallbackAnimation;
 
     public virtual bool ShowsRangeOnPlayer()
     {

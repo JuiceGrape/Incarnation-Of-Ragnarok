@@ -53,6 +53,8 @@ public class PlayerController : MonoBehaviour
 
     AbilityBase cachedAbility = null;
 
+    AnimatorOverrideController cachedController = null;
+
     void Start()
     {
         input.OnMousePosChanged.AddListener(OnMousePosChanged);
@@ -73,6 +75,16 @@ public class PlayerController : MonoBehaviour
         indicatorOrigin = GetComponentInChildren<IndicatorOrigin>();
         if (!indicatorOrigin)
             Debug.LogError("Player has no indicator origin. Defaulting to own location as origin"); //TODO: Maybe warning instead?
+
+
+        //DEBUG -----------------------------------
+        //Remove when we add weapon equipping with custom animation controllers
+        cachedController = animator.runtimeAnimatorController as AnimatorOverrideController;
+        if (cachedController == null)
+        {
+            Debug.LogError("Attached controller is not an override controller");
+        }
+        //DEBUG END ---------------------------
     }
 
     private void Update()
@@ -237,7 +249,17 @@ public class PlayerController : MonoBehaviour
         }
         OnCastStart();
         cachedAbility = ability;
-        animator.Play(ability.ReferenceAnimation.name);
+
+        if (cachedController[ability.ReferenceAnimation] != ability.ReferenceAnimation)
+        {
+            Debug.Log(cachedController[ability.ReferenceAnimation]);
+            animator.Play(ability.ReferenceAnimation.name);
+        }
+        else
+        {
+            Debug.Log("alt");
+            animator.Play(ability.FallbackAnimation.name);
+        }
     }
 
     public void OnCastStart()
