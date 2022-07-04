@@ -40,6 +40,7 @@ public class PlayerController : MonoBehaviour
     Player player;
     Vector3 mousePos;
     BasicAttackHandler basicAttack;
+    bool firstAttack = false;
 
     Targetable target;
 
@@ -222,6 +223,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void StartAttacking()
+    {
+        firstAttack = true;
+    }
+
     public void AttackTarget()
     {
         var hittable = target as Hittable;
@@ -229,7 +235,16 @@ public class PlayerController : MonoBehaviour
         {
             if (attackTimer >= 0.0f)
             {
-                animator.SetTrigger("Attack");
+                if (firstAttack)
+                {
+                    animator.SetTrigger("StartAttacking");
+                    firstAttack = false;
+                }  
+                else
+                {
+                    animator.SetTrigger("Attack");
+                }
+
                 attackTimer -= player.GetAttackDelay();
             }
         }

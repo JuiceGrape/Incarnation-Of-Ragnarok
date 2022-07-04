@@ -33,6 +33,7 @@ public class PCAttacking : IPlayerControllerState
     public override void Entry()
     {
         AttachedContainer.DisableMovement();
+        AttachedContainer.StartAttacking();
     }
 
     public override void Exit()
