@@ -40,17 +40,21 @@ public class PlayerController : MonoBehaviour
     Player player;
     Vector3 mousePos;
     BasicAttackHandler basicAttack;
+    bool firstAttack = false;
 
     Targetable target;
 
-    bool IsCasting = false;
+    public bool IsCasting = false;
 
-    float attackTimer = 0.0f;
+    public float attackTimer = 0.0f;
 
     private Queue<Event> EventQueue = new Queue<Event>();
 
-    IPlayerControllerState CurrentState;
-    
+    public IPlayerControllerState CurrentState;
+
+    AbilityBase cachedAbility = null;
+
+    AnimatorOverrideController cachedController = null;
 
     void Start()
     {
@@ -72,6 +76,16 @@ public class PlayerController : MonoBehaviour
         indicatorOrigin = GetComponentInChildren<IndicatorOrigin>();
         if (!indicatorOrigin)
             Debug.LogError("Player has no indicator origin. Defaulting to own location as origin"); //TODO: Maybe warning instead?
+
+
+        //DEBUG -----------------------------------
+        //Remove when we add weapon equipping with custom animation controllers
+        cachedController = animator.runtimeAnimatorController as AnimatorOverrideController;
+        if (cachedController == null)
+        {
+            Debug.LogError("Attached controller is not an override controller");
+        }
+        //DEBUG END ---------------------------
     }
 
     private void Update()
@@ -161,10 +175,12 @@ public class PlayerController : MonoBehaviour
     public void DisableMovement()
     {
         GetComponent<NavMeshAgent>().isStopped = true;
+        animator.SetBool("IsMoving", false);
     }
 
     public void EnableMovement()
     {
+        animator.SetBool("IsMoving", true);
         GetComponent<NavMeshAgent>().isStopped = false;
     }
 
@@ -207,6 +223,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void StartAttacking()
+    {
+        firstAttack = true;
+    }
+
     public void AttackTarget()
     {
         var hittable = target as Hittable;
@@ -214,7 +235,16 @@ public class PlayerController : MonoBehaviour
         {
             if (attackTimer >= 0.0f)
             {
-                animator.SetTrigger("Attack");
+                if (firstAttack)
+                {
+                    animator.SetTrigger("StartAttacking");
+                    firstAttack = false;
+                }  
+                else
+                {
+                    animator.SetTrigger("Attack");
+                }
+
                 attackTimer -= player.GetAttackDelay();
             }
         }
@@ -226,6 +256,26 @@ public class PlayerController : MonoBehaviour
     }
 
     //External things
+    public void Cast(AbilityBase ability)
+    {
+        if (IsCasting)
+        {
+            OnCastCanceled();
+        }
+        OnCastStart();
+        cachedAbility = ability;
+
+        if (cachedController[ability.ReferenceAnimation] != ability.ReferenceAnimation)
+        {
+            Debug.Log(cachedController[ability.ReferenceAnimation]);
+            animator.Play(ability.ReferenceAnimation.name);
+        }
+        else
+        {
+            Debug.Log("alt");
+            animator.Play(ability.FallbackAnimation.name);
+        }
+    }
 
     public void OnCastStart()
     {
@@ -242,6 +292,10 @@ public class PlayerController : MonoBehaviour
     public void OnCastCanceled()
     {
         IsCasting = false; 
+    }
+    public void OnCastActivate() //TODO: Implement
+    {
+        Debug.Log("Casting: " + cachedAbility);
     }
 
     public Vector3 GetIndicatorPosition()
