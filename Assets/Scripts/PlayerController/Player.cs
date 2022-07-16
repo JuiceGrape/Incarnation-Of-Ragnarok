@@ -5,44 +5,55 @@ using UnityEngine;
 public class Player : MonoBehaviour //Acts like a layer between equipment and logic to provide calculations for damage / range / other
 {
     [SerializeField]
-    private Weapon EquippedWeapon = null;
+    private InventoryWeapon EquippedWeapon = null;
 
     public float GetAttackRange()
     {
-        if (EquippedWeapon != null)
-            return EquippedWeapon.GetRange();
+        if(EquippedWeapon != null)
+            return EquippedWeapon.GetAttackRange();
         else
-        {
-            Debug.LogError("No weapon, range is 0");
+		{
+            Debug.LogError("No Weapon, range is 0");
             return 0.0f;
-        }
-            
+		}            
     }
 
-    public void EquipWeapon(Weapon weapon)
+    public void EquipItem(InventoryItem item)
     {
-        throw new System.NotImplementedException("Can't equip weapons yet");
+        if (item is InventoryWeapon)
+        {
+            EquipWeapon(item as InventoryWeapon);
+        }
+        else if (item is InventoryEquipment)
+        {
+            //stuff for equipping equipment
+        }
+    }
+
+    private void EquipWeapon(InventoryWeapon weapon)
+    {
+        EquippedWeapon = weapon;
     }
 
     public float GetAttackDelay() //Delay between attack in seconds
     {
-        return 1.0f / EquippedWeapon.GetAttackSpeed();
+        return 1.0f / EquippedWeapon.GetBaseAttackSpeed();
     }
 
     public float GetDamage()
     {
-        return EquippedWeapon.AttackDamage;
+        return EquippedWeapon.GetBaseDamage();
     }
 
     public Enums.Element GetDamageType()
     {
-        return EquippedWeapon.DamageType;
+        return EquippedWeapon.GetElement();
     }
 
     public Projectile GetProjectile()
     {
-        if (EquippedWeapon is RangedWeapon)
-            return ((RangedWeapon)EquippedWeapon).GetProjectile();
+        if (EquippedWeapon.GetWeaponType().Equals(Enums.WeaponType.Ranged))
+            return EquippedWeapon.GetProjectile();
         else
             return null;
     }

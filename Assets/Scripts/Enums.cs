@@ -4,6 +4,15 @@ using UnityEngine;
 
 public class Enums
 {
+    public enum ItemType
+    {
+        Misc,
+        Equipment,
+        Weapon,
+        Consumable,
+        Invalid
+    }
+
     public enum SlotType
     {
         Weapon,
@@ -29,6 +38,12 @@ public class Enums
         Dexterity,
         Constitution,
         Intelligence,
+    }
+
+    public enum WeaponType
+    {
+        Melee,
+        Ranged
     }
 
     public enum Element
