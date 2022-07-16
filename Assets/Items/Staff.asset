@@ -21,4 +21,6 @@ MonoBehaviour:
   attackRange: 10
   baseAttackSpeed: 10
   baseAttackDamage: 1
-  wepElement: 1
+  weaponElement: 0
+  projectilePrefab: {fileID: 6544254532897439636, guid: e310a85031eba3441b263a5a7d482561,
+    type: 3}

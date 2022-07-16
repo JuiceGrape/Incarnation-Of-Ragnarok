@@ -428,8 +428,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ItemBases: {fileID: 1307901984}
   Player: {fileID: 1549126138}
-  uiManager: {fileID: 0}
-  items: []
+  uiManager: {fileID: 250376776}
 --- !u!4 &499583884
 Transform:
   m_ObjectHideFlags: 0
